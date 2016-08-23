@@ -16,6 +16,7 @@ Interface
 		ArmorTypeCloth = 0;
 		ArmorTypeLight = 1;
 		ArmorTypeHeavy = 2;
+		LineBreak = #13#10;
 
 Implementation
 

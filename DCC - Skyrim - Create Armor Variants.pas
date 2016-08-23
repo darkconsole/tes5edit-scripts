@@ -44,17 +44,17 @@ Unit
 Uses
 	'Dcc\Skyrim';
 
+Var
+	ArmorRating: Integer;
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-Procedure DccMakeArmorVariant(Form: IInterface; ArmorType: Integer);
+Procedure DccMakeArmorVariant(Form: IInterface; ArmorType: Integer; ArmorRating: Integer);
 Var
 	FormNew: IInterface;
 	RegEx: TPerlRegex;
-	ArmorRating: Integer;
 Begin
-	ArmorRating := 35;
-
 	RegEx := TPerlRegex.Create();
 	RegEx.RegEx       := '_(cloth|light|heavy)';
 	RegEx.Options     := [ preCaseless ];
@@ -88,11 +88,12 @@ Procedure DccProcessArmor(Form: IInterface);
 Var
 	ArmorType: Integer;
 Begin
+
 	ArmorType := 0;
 	While(ArmorType <= 2)
 	Do Begin
 		If(Skyrim.ArmoGetArmorType(Form) <> ArmorType)
-		Then DccMakeArmorVariant(Form,ArmorType);
+		Then DccMakeArmorVariant(Form,ArmorType,ArmorRating);
 
 		Inc(ArmorType);
 	End;
@@ -102,8 +103,38 @@ End;
 ///////////////////////////////////////////////////////////////////////////////
 
 Function Initialize: Integer;
+Var
+	InputResult: Boolean;
+	InputArmorRating: String;
 Begin
+	InputResult := InputQuery(
+		'Enter Armor Rating',
+		(
+			'Enter the armor rating the chest piece of this set should have. ' +
+			'The other pieces if they exist will be auto-calculated based on the chest piece. Here are some values to help you make reasonable not game-breaking armor. Cloth will always be given an armor value of so mage perks work.' +
+			Skyrim.LineBreak + Skyrim.LineBreak +
+			'49 = Daedric' + Skyrim.LineBreak +
+			'46 = Dragonplate, Stalhrim'+ Skyrim.LineBreak +
+			'43 = Ebony and Nordic' + Skyrim.LineBreak +
+			'41 = Dragonscale' + Skyrim.LineBreak +
+			'40 = Orcish, Steel Plate, Chitin' + Skyrim.LineBreak +
+			'38 = Glass' + Skyrim.LineBreak +
+			'34 = Dwarven' + Skyrim.LineBreak +
+			'31 = Steel' + Skyrim.LineBreak +
+			'29 = Elven' + Skyrim.LineBreak +
+			'28 = Banded Iron' + Skyrim.LineBreak +
+			'25 = Iron' + Skyrim.LineBreak +
+			'20 = Hide' + Skyrim.LineBreak + + Skyrim.LineBreak +
+			'Default: 35' + Skyrim.LineBreak
+		),
+		InputArmorRating
+	);
 
+	If(InputResult = FALSE)
+	Then Result := 1;
+
+	InputArmorRating := Trim(InputArmorRating);
+	ArmorRating := StrToIntDef(InputArmorRating,35);
 End;
 
 Function Process(Form: IInterface): Integer;
@@ -116,6 +147,8 @@ Begin
 	Else Begin
 		DccProcessArmor(Form);
 	End;
+
+	Result := 0;
 End;
 
 ///////////////////////////////////////////////////////////////////////////////
