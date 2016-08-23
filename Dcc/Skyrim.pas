@@ -12,10 +12,10 @@ Interface
 	Function FormGet: IInterface;
 
 	Const
+		Debug = TRUE;
 		ArmorTypeCloth = 0;
 		ArmorTypeLight = 1;
 		ArmorTypeHeavy = 2;
-
 
 Implementation
 
@@ -37,7 +37,8 @@ Implementation
 	Function FormCopy(Form: IInterface): IInterface;
 	Begin
 
-		AddMessage('[:::] Copying ' + EditorID(Form));
+		If(Debug)
+		Then AddMessage('[:::] Copying ' + EditorID(Form));
 
 		Result := wbCopyElementToFile(
 			Form,
@@ -196,12 +197,13 @@ Implementation
 		);
 
 		If(CompareText('Light Armor',ArmorType) = 0)
-		Then Output := ArmorTypeLight
-
+		Then Begin
+			Output := ArmorTypeLight;
+		End
 		Else If(CompareText('Heavy Armor',ArmorType) = 0)
-		Then Output := ArmorTypeHeavy
-
-		Else Output := ArmorTypeCloth;
+		Then Begin
+			Output := ArmorTypeHeavy;
+		End;
 
 		Result := Output;
 	End;
@@ -239,21 +241,35 @@ Implementation
 	End;
 
 	Procedure ArmoSetArmorRatingAuto(Form: IInterface; BaseValue: Integer);
+	Var
+		Rating: Int;
 	Begin
 		If(ArmoGetArmorType(Form) = 0)
-		Then ArmoSetArmorRating(Form,0)
+		Then Begin
+			Rating := 0;
+		End
 
 		Else If(FormHasKeywordString(Form,'ArmorCuirass') <> -1)
-		Then ArmoSetArmorRating(Form,BaseValue)
+		Then Begin
+			Rating := BaseValue;
+		End
 
 		Else If(FormHasKeywordString(Form,'ArmorGauntlets') <> -1)
-		Then ArmoSetArmorRating(Form,(BaseValue * 0.3))
+		Then Begin
+			Rating := (BaseValue * 0.3);
+		End
 
 		Else If(FormHasKeywordString(Form,'ArmorBoots') <> -1)
-		Then ArmoSetArmorRating(Form,(BaseValue * 0.4))
+		Then Begin
+			Rating := (BaseValue * 0.4);
+		End
 
 		Else If(FormHasKeywordString(Form,'ArmorHelmet') <> -1)
-		Then ArmoSetArmorRating(Form,(BaseValue * 0.3));
+		Then Begin
+			Rating := (BaseValue * 0.3);
+		End;
+
+		ArmoSetArmorRating(Form,Rating);
 	End;
 
 	Procedure ArmoReplaceArmorTypeName(Form: IInterface; ArmorType: Integer);

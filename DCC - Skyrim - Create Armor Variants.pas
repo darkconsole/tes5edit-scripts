@@ -69,11 +69,16 @@ Begin
 	Then Begin
 		FormNew := Skyrim.FormCopy(Form);
 
+		// first update its editor id.
 		Skyrim.FormSetEditorID(FormNew,RegEx.Subject);
+
+		// set it to be the armor we need and replace whatever needs it.
 		Skyrim.ArmoSetArmorType(FormNew,ArmorType);
-		Skyrim.ArmoSetArmorRatingAuto(FormNew,ArmorRating);
 		Skyrim.ArmoReplaceArmorTypeKeywords(FormNew,ArmorType);
 		Skyrim.ArmoReplaceArmorTypeName(FormNew,ArmorType);
+
+		// then handling updating values that depend on the type of armor.
+		Skyrim.ArmoSetArmorRatingAuto(FormNew,ArmorRating);
 	End;
 
 	RegEx.Free();
