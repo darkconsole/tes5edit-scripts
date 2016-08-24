@@ -65,8 +65,11 @@ Begin
 	Then RegEx.ReplaceAll()
 	Else RegEx.Subject := EditorID(Form) + '_' + GetArmorTypeWord(ArmorType);
 
-	If(NOT Assigned(Skyrim.FormFind(GetFile(Form),'ARMO',RegEx.Subject)))
+	If(Assigned(Skyrim.FormFind(GetFile(Form),'ARMO',RegEx.Subject)))
 	Then Begin
+		AddMessage('[***] ' + RegEx.Subject + ' already exists.');
+	End
+	Else Begin
 		FormNew := Skyrim.FormCopy(Form);
 
 		// first update its editor id.
@@ -111,7 +114,9 @@ Begin
 		'Enter Armor Rating',
 		(
 			'Enter the armor rating the chest piece of this set should have. ' +
-			'The other pieces if they exist will be auto-calculated based on the chest piece. Here are some values to help you make reasonable not game-breaking armor. Cloth will always be given an armor value of so mage perks work.' +
+			'The other pieces if they exist will be auto-calculated based on the chest piece. '+
+			'Here are some values to help you make reasonable not game-breaking armor. '+
+			'Cloth will always be given an armor value of 0 so mage perks work.' +
 			Skyrim.LineBreak + Skyrim.LineBreak +
 			'49 = Daedric' + Skyrim.LineBreak +
 			'46 = Dragonplate, Stalhrim'+ Skyrim.LineBreak +
