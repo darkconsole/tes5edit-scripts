@@ -13,6 +13,25 @@ ID, the in-game name, and swap out all the keywords that matter for making perks
 work and stuff. It will also auto calculate the proper armor values for the
 pieces based on the chest piece armor value.
 
+#### About Standards
+
+In order for it to properly detect if an armor type already exists, it needs
+to have _cloth, _light, or _heavy somewhere in its EditorID. Good Examples:
+
+* ```dcc_latex_ArmoTanktop_ClearS_Cloth```
+* ```aaaIdiotPrefixModderArmor_Cloth_Body```
+* ```zzzidiotprefixmodder_clotharmor```
+
+This script will then check if these exist:
+
+* ```dcc_latex_ArmoTanktop_ClearS_Heavy```
+* ```aaaIdiotPrefixModderArmor_Heavy_Body```
+* ```zzzidiotprefixmodder_Heavyarmor```
+
+and if it does not find those, it will make them. By convention I suggest you
+always put _Cloth, _Light, and _Heavy at the end of the Editor ID, as that is
+where this script is going to put them.
+
 #### About Keywords
 
 I personally suggest when you create outfits that you create the Cloth version
