@@ -19,14 +19,14 @@ In order for it to properly detect if an armor type already exists, it needs
 to have _cloth, _light, or _heavy somewhere in its EditorID. Good Examples:
 
 * ```dcc_latex_ArmoTanktop_ClearS_Cloth```
-* ```aaaIdiotPrefixModderArmor_Cloth_Body```
-* ```zzzidiotprefixmodder_clotharmor```
+* ```aaaHerpDerp_Cloth_Body```
+* ```zzzherpderp_clotharmor```
 
 This script will then check if these exist:
 
 * ```dcc_latex_ArmoTanktop_ClearS_Heavy```
-* ```aaaIdiotPrefixModderArmor_Heavy_Body```
-* ```zzzidiotprefixmodder_Heavyarmor```
+* ```aaaHerpDerp_Heavy_Body```
+* ```zzzherpderp_Heavyarmor```
 
 and if it does not find those, it will make them. By convention I suggest you
 always put _Cloth, _Light, and _Heavy at the end of the Editor ID, as that is
