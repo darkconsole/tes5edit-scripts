@@ -13,10 +13,16 @@ Interface
 
 	Const
 		Debug = TRUE;
+		LineBreak = #13#10;
+
 		ArmorTypeCloth = 0;
 		ArmorTypeLight = 1;
 		ArmorTypeHeavy = 2;
-		LineBreak = #13#10;
+
+		ArmaModelMaleThird = 2;
+		ArmaModelFemaleThird = 3;
+		ArmaModelMaleFirst = 4;
+		ArmaModelFemaleFirst = 5;
 
 Implementation
 
@@ -389,6 +395,64 @@ Implementation
 			Inc(Iter);
 		End;
 
+	End;
+
+	////////
+	////////
+
+	Function GetArmaPathRoot(ModelKey: Integer): String;
+	Begin
+		Case ModelKey Of
+			2: Result := 'Male world model';
+			3: Result := 'Female world model';
+			4: Result := 'Male 1st Person';
+			5: Result := 'Female 1st Person';
+		Else
+			Result := 'Male world model';
+		End;
+	End;
+
+	Function ArmaGetModelFilename(Form: IInterface; ModelKey: Integer): String;
+	Var
+		ModelPath: String;
+	Begin
+		ModelPath := GetArmaPathRoot(ModelKey) + '\MOD' + IntToStr(ModelKey) +  ' - Model Filename';
+		Result := GetEditValue(ElementByPath(Form,ModelPath));
+	End;
+
+	Function ArmaGetModelTextureElementByIndex(Form: IInterface; ModelKey: Integer): IInterface;
+	Var
+		ModelPath: String;
+		TextureCount: Integer;
+		Iter: Integer;
+	Begin
+		ModelPath := GetArmaPathRoot(ModelKey) + '\MO' + IntToStr(ModelKey) + 'S - Alternate Textures';
+		Result := ElementByPath(Form,ModelPath);
+	End;
+
+	Function ArmaGetModelTextureCount(Form: IInterface; ModelKey: Integer): Integer;
+	Begin
+		Result := ElementCount(ArmaGetModelTextureElementByIndex(Form,ModelKey));
+	End;
+
+	Function ArmaGetModelTextureSetByIndex(Form: IInterface; ModelKey: Integer; TextureKey: Integer): IInterface;
+	Var
+		TextureElement: IInterface;
+	Begin
+		TextureElement := ElementByIndex(ArmaGetModelTextureElementByIndex(Form,ModelKey),TextureKey);
+		Result := LinksTo(ElementByPath(TextureElement,'New Texture'));
+	End;
+
+	Procedure ArmaSetModelTextureSetByIndex(Form: IInterface; ModelKey: Integer; TextureKey: Integer; TextureSet: IInterface);
+	Var
+		TextureElement: IInterface;
+	Begin
+		TextureElement := ElementByIndex(ArmaGetModelTextureElementByIndex(Form,ModelKey),TextureKey);
+		SetEditValue(
+			ElementByPath(TextureElement,'New Texture'),
+			IntToHex(FormID(TextureSet),8)
+			//IntToHex(LoadOrderFormIDtoFileFormID( FileByLoadOrder(TextureSet shr 24), TextureSet )),
+		);
 	End;
 
 End.
