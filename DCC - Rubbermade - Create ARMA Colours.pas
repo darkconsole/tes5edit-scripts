@@ -399,7 +399,7 @@ Implementation
 		DccProcess(Form);
 
 		// remove this result when done testing for batch processing.
-		Result := 1;
+		// Result := 1;
 	End;
 
 End.
