@@ -397,6 +397,24 @@ Implementation
 
 	End;
 
+	Function ArmoGetModelElement(Form: IInterface): IInterface;
+	Begin
+		Result := ElementByPath(Form,'Armature');
+	End;
+
+	Function ArmoGetModelCount(Form: IInterface): Integer;
+	Begin
+		Result := ElementCount(ArmoGetModelElement(Form));
+	End;
+
+	Procedure ArmoSetModelByIndex(Form: IInterface; ModelNum: Integer; Model: IInterface);
+	Begin
+		SetEditValue(
+			ElementByIndex(ArmoGetModelElement(Form),ModelNum),
+			IntToHex(FormID(Model),8)
+		);
+	End;
+
 	////////
 	////////
 
