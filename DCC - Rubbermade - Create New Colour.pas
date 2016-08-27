@@ -107,7 +107,7 @@ Begin
 
 	DiffuseFile := 'd.' + LowerCase(SolidKey) + '-' + LowerCase(ColourFile) + '.dds';
 	NormalFile := 'n.' + LowerCase(SolidKey) + '.dds';
-	EditorID := 'dcc_latex_Tex' + DccFirstCase(ColourFile) + '_' + UpperCase(FinishKey) + UpperCase(SolidKey);
+	EditorID := 'dcc_latex_Tex' + DccFirstCase(ColourFile) + '' + UpperCase(FinishKey) + UpperCase(SolidKey);
 
 	AddMessage(EditorID + ': ' + DiffuseFile + ', ' + NormalFile + ', ' + FinishFile);
 

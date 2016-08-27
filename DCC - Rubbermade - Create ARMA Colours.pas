@@ -371,6 +371,7 @@ Implementation
 		Colors.Add('Black');
 		Colors.Add('White');
 		Colors.Add('Natural');
+		Colors.Add('Brown');
 
 		// these are the finish names as they appear in the TextureSet EditorIDs.
 		Finishes.Add('M'); // matte.
