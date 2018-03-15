@@ -1,5 +1,8 @@
 Unit Skyrim;
 
+Uses
+	'Dcc\Util';
+
 {
 	TES5Edit Reference:
 	http://www.creationkit.com/index.php?title=TES5Edit_Scripting_Functions
@@ -11,18 +14,18 @@ Interface
 	Function FormFind: IInterface;
 	Function FormGet: IInterface;
 
-	Const
-		Debug = TRUE;
-		LineBreak = #13#10;
+Const
+	Debug = FALSE;
+	LineBreak = #13#10;
 
-		ArmorTypeCloth = 0;
-		ArmorTypeLight = 1;
-		ArmorTypeHeavy = 2;
+	ArmorTypeCloth = 0;
+	ArmorTypeLight = 1;
+	ArmorTypeHeavy = 2;
 
-		ArmaModelMaleThird = 2;
-		ArmaModelFemaleThird = 3;
-		ArmaModelMaleFirst = 4;
-		ArmaModelFemaleFirst = 5;
+	ArmaModelMaleThird = 2;
+	ArmaModelFemaleThird = 3;
+	ArmaModelMaleFirst = 4;
+	ArmaModelFemaleFirst = 5;
 
 Implementation
 
@@ -225,7 +228,7 @@ Implementation
 			1: ArmorWord := 'Light Armor';
 			2: ArmorWord := 'Heavy Armor';
 		Else
-			ArmorWord = 'Clothing';
+			ArmorWord := 'Clothing';
 		End;
 
 		SetElementEditValues(
@@ -251,6 +254,8 @@ Implementation
 	Var
 		Rating: Int;
 	Begin
+		Rating := (BaseValue * 0.2);
+
 		If(ArmoGetArmorType(Form) = 0)
 		Then Begin
 			Rating := 0;
@@ -472,5 +477,114 @@ Implementation
 			//IntToHex(LoadOrderFormIDtoFileFormID( FileByLoadOrder(TextureSet shr 24), TextureSet )),
 		);
 	End;
+
+	////////////////////////////////
+	////////////////////////////////
+
+	FUNCTION ArmaGetModelTextureSetByShape(
+		Form: IInterface;
+		ModelKey: Integer;
+		ShapeName: String
+	): IInterface;
+
+	VAR
+		TextureList: IInterface;
+		TextureCount: Integer;
+		TextureIter: Integer;
+		TextureItem: IInterface;
+		TextureName: String;
+
+	BEGIN
+		TextureList := ArmaGetModelTextureElementByIndex(Form,ModelKey);
+		TextureCount := ElementCount(TextureList);
+
+		FOR TextureIter := 0 TO (TextureCount - 1)
+		DO BEGIN
+			TextureItem := ElementByIndex(TextureList,TextureIter);
+			TextureName := GetEditValue(ElementByPath(TextureItem,'3D Name'));
+
+			IF(CompareText(TextureName,ShapeName) = 0)
+			THEN BEGIN
+				Result := LinksTo(ElementByPath(TextureItem,'New Texture'));
+				EXIT;
+			END;
+
+		END;
+
+		Result := NIL;
+	END;
+
+	////////////////////////////////
+	////////////////////////////////
+
+	PROCEDURE ArmaSetModelTextureSetByShape(
+		Form: IInterface;
+		ModelKey: Integer;
+		ShapeName: String;
+		TextureSet: IInterface
+	);
+
+	VAR
+		TextureList: IInterface;
+		TextureCount: Integer;
+		TextureIter: Integer;
+		TextureItem: IInterface;
+		TextureName: String;
+
+	BEGIN
+		TextureList := ArmaGetModelTextureElementByIndex(Form,ModelKey);
+		TextureCount := ElementCount(TextureList);
+
+		FOR TextureIter := 0 TO (TextureCount - 1)
+		DO BEGIN
+			TextureItem := ElementByIndex(TextureList,TextureIter);
+			TextureName := GetEditValue(ElementByPath(TextureItem,'3D Name'));
+
+			IF(CompareText(TextureName,ShapeName) = 0)
+			THEN BEGIN
+				SetEditValue(
+					ElementByPath(TextureItem,'New Texture'),
+					IntToHex(FormID(TextureSet),8)
+				);
+				EXIT;
+			END;
+
+		END;
+	END;
+
+	////////////////////////////////
+	////////////////////////////////
+
+	Function CobjGetWorkebenchKeyword(Form: IInterface): IInterface;
+	Begin
+		Result := GetEditValue(ElementbySignature(Form,'BNAM'));
+	End;
+
+	Procedure CobjSetWorkebenchKeyword(Form: IInterface; FormID: Integer);
+	Begin
+		SetEditValue(
+			ElementBySignature(Form,'BNAM'),
+			FormID
+		);
+	End;
+
+	////////////////////////////////
+	////////////////////////////////
+
+	FUNCTION CobjGetCreatedObject(Form: IInterface): IInterface;
+	BEGIN
+		Result := GetEditValue(ElementBySignature(Form,'CNAM'));
+	END;
+
+	////////////////////////////////
+	////////////////////////////////
+
+	PROCEDURE CobjSetCreatedObject(Form: IInterface; CreateObject: IInterface);
+	BEGIN
+		SetEditValue(
+			ElementBySignature(Form,'CNAM'),
+			IntToHex(FormID(CreateObject),8)
+		);
+	END;
 
 End.

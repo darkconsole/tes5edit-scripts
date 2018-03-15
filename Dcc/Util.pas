@@ -1,12 +1,13 @@
 
-Unit Util;
+Unit
+	Util;
 
 Interface
 	Function FirstCase: String;
 
 Implementation
 
-	Function FirstCase(StrIn: string): String;
+	Function FirstCase(StrIn: String): String;
 	Var
 		StrOut: String;
 		Iter: Int;
@@ -33,6 +34,25 @@ Implementation
 		End;
 
 		Result := StrOut;
+	End;
+
+	Function PregReplace(Format: String; Replacement: String; Source: String): String;
+	Var
+		RegEx: TPerlRegex;
+	Begin
+
+		RegEx := TPerlRegex.Create();
+		RegEx.RegEx := Format;
+		RegEx.Replacement := Replacement;
+		RegEx.Options := [ preCaseless ];
+		RegEx.Subject := Source;
+
+		If(RegEx.Match())
+		Then Begin
+			RegEx.ReplaceAll();
+		End;
+
+		Result := RegEx.Subject;
 	End;
 
 End.
