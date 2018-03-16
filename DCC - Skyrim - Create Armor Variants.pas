@@ -56,9 +56,9 @@ Var
 	RegEx: TPerlRegex;
 Begin
 	RegEx := TPerlRegex.Create();
-	RegEx.RegEx       := '_(cloth|light|heavy)';
+	RegEx.RegEx       := '_(armor)?(cloth|light|heavy)';
 	RegEx.Options     := [ preCaseless ];
-	RegEx.Replacement := '_' + GetArmorTypeWord(ArmorType);
+	RegEx.Replacement := '_Armor' + GetArmorTypeWord(ArmorType);
 	RegEx.Subject     := EditorID(Form);
 
 	If(RegEx.Match())
@@ -67,22 +67,20 @@ Begin
 
 	If(Assigned(Skyrim.FormFind(GetFile(Form),'ARMO',RegEx.Subject)))
 	Then Begin
-		AddMessage('[***] ' + RegEx.Subject + ' already exists.');
+		AddMessage('[***] ' + RegEx.Subject + ' already exists, updating values.');
+		FormNew := Skyrim.FormFind(GetFile(Form),'ARMO',RegEx.Subject)
 	End
 	Else Begin
+		AddMessage('[***] ' + RegEx.Subject + ' does not exist yet, creating.');
 		FormNew := Skyrim.FormCopy(Form);
-
-		// first update its editor id.
 		Skyrim.FormSetEditorID(FormNew,RegEx.Subject);
-
-		// set it to be the armor we need and replace whatever needs it.
 		Skyrim.ArmoSetArmorType(FormNew,ArmorType);
 		Skyrim.ArmoReplaceArmorTypeKeywords(FormNew,ArmorType);
 		Skyrim.ArmoReplaceArmorTypeName(FormNew,ArmorType);
-
-		// then handling updating values that depend on the type of armor.
-		Skyrim.ArmoSetArmorRatingAuto(FormNew,ArmorRating);
 	End;
+
+	// then handling updating values that depend on the type of armor.
+	Skyrim.ArmoSetArmorRatingAuto(FormNew,ArmorRating);
 
 	RegEx.Free();
 End;
@@ -95,8 +93,9 @@ Begin
 	ArmorType := 0;
 	While(ArmorType <= 2)
 	Do Begin
-		If(Skyrim.ArmoGetArmorType(Form) <> ArmorType)
-		Then DccMakeArmorVariant(Form,ArmorType,ArmorRating);
+		// If(Skyrim.ArmoGetArmorType(Form) <> ArmorType)
+		//Then
+		DccMakeArmorVariant(Form,ArmorType,ArmorRating);
 
 		Inc(ArmorType);
 	End;

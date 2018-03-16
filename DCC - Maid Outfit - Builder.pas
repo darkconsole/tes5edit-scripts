@@ -20,7 +20,7 @@ Begin
 	AddMessage('=== Beginning Maid Form Build: ' + Name(Plugin));
 	AddMessage(StringOfChar('=',80));
 	AddMessage('');
-	MaidBuildArma(Plugin);
+	MaidBuildOutfits(Plugin);
 End;
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -7,10 +7,30 @@ CONST
 
 IMPLEMENTATION
 
-	PROCEDURE MaidBuildArma(Plugin: IInterface);
+	FUNCTION MaidReplaceFormID(
+		Input: String;
+		OutfitID: String;
+		VariantName: String;
+		EditPrefix: Boolean;
+	): String;
+	VAR
+		Output: String;
 	BEGIN
-		MaidBuildOutfits(Plugin);
+		Output := Input;
+
+		Output := Util.PregReplace('%Variant%',VariantName,Output);
+		Output := Util.PregReplace('%ID%',OutfitID,Output);
+
+		IF(EditPrefix = TRUE)
+		THEN BEGIN
+			Output := Util.PregReplace('dcc_maid_','dcc_maidx_',Output);
+		END;
+
+		Result := Output;
 	END;
+
+	////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////
 
 	PROCEDURE MaidBuildOutfits(Plugin: IInterface);
 	VAR
@@ -117,15 +137,23 @@ IMPLEMENTATION
 		TextureSet: IInterface;
 
 	BEGIN
-		TextureCount := ArmorEntry.O['Textures'].Count;
 
-		SourceID := JSON.O['Sources'].O[ArmorEntry.S['Source']].S['ARMA'];
-		SourceID := Util.PregReplace('%Variant%',VariantName,SourceID);
+		SourceID := MaidReplaceFormID(
+			JSON.O['Sources'].O[ArmorEntry.S['Source']].S['ARMA'],
+			OutfitEntry.S['ID'],
+			VariantName,
+			FALSE
+		);
 
-		DestID := JSON.O['Outputs'].O[ArmorEntry.S['Source']].S['ARMA'];
-		DestID := Util.PregReplace('%ID%',OutfitEntry.S['ID'],DestID);
-		DestID := Util.PregReplace('%Variant%',VariantName,DestID);
+		DestID := MaidReplaceFormID(
+			JSON.O['Outputs'].O[ArmorEntry.S['Source']].S['ARMA'],
+			OutfitEntry.S['ID'],
+			VariantName,
+			TRUE
+		);
+
 		DestForm := Skyrim.FormFind(Plugin,'ARMA',DestID);
+		TextureCount := ArmorEntry.O['Textures'].Count;
 
 		// make sure we can load the template form.
 
@@ -199,14 +227,21 @@ IMPLEMENTATION
 		SourceForm: IInterface;
 		ArmoName: String;
 	BEGIN
-		SourceID := JSON.O['Sources'].O[ArmorEntry.S['Source']].S['ARMO'];
-		SourceID := Util.PregReplace('%Variant%',VariantName,SourceID);
+		SourceID := MaidReplaceFormID(
+			JSON.O['Sources'].O[ArmorEntry.S['Source']].S['ARMO'],
+			OutfitEntry.S['ID'],
+			VariantName,
+			FALSE
+		);
 
-		DestID := JSON.O['Outputs'].O[ArmorEntry.S['Source']].S['ARMO'];
-		DestID := Util.PregReplace('%ID%',OutfitEntry.S['ID'],DestID);
-		DestID := Util.PregReplace('%Variant%',VariantName,DestID);
+		DestID := MaidReplaceFormID(
+			JSON.O['Outputs'].O[ArmorEntry.S['Source']].S['ARMO'],
+			OutfitEntry.S['ID'],
+			VariantName,
+			TRUE
+		);
+
 		DestForm := Skyrim.FormFind(Plugin,'ARMO',DestID);
-
 		ArmoName := OutfitEntry.S['Prefix'] + ' ' + VariantName + ' Maid ' + JSON.O['Names'].S[ArmorEntry.S['Source']];
 
 		// make sure we can load the template form.
@@ -257,12 +292,20 @@ IMPLEMENTATION
 		DestID: String;
 		DestForm: IInterface;
 	BEGIN
-		SourceID := JSON.O['Sources'].O[ArmorEntry.S['Source']].S['Craft'];
-		SourceID := Util.PregReplace('%Variant%',VariantName,SourceID);
+		SourceID := MaidReplaceFormID(
+			JSON.O['Sources'].O[ArmorEntry.S['Source']].S['Craft'],
+			OutfitEntry.S['ID'],
+			VariantName,
+			FALSE
+		);
 
-		DestID := JSON.O['Outputs'].O[ArmorEntry.S['Source']].S['Craft'];
-		DestID := Util.PregReplace('%ID%',OutfitEntry.S['ID'],DestID);
-		DestID := Util.PregReplace('%Variant%',VariantName,DestID);
+		DestID := MaidReplaceFormID(
+			JSON.O['Outputs'].O[ArmorEntry.S['Source']].S['Craft'],
+			OutfitEntry.S['ID'],
+			VariantName,
+			TRUE
+		);
+
 		DestForm := Skyrim.FormFind(Plugin,'COBJ',DestID);
 
 		// check that the template exists.
@@ -310,12 +353,20 @@ IMPLEMENTATION
 		DestID: String;
 		DestForm: IInterface;
 	BEGIN
-		SourceID := JSON.O['Sources'].O[ArmorEntry.S['Source']].S['Temper'];
-		SourceID := Util.PregReplace('%Variant%',VariantName,SourceID);
+		SourceID := MaidReplaceFormID(
+			JSON.O['Sources'].O[ArmorEntry.S['Source']].S['Temper'],
+			OutfitEntry.S['ID'],
+			VariantName,
+			FALSE
+		);
 
-		DestID := JSON.O['Outputs'].O[ArmorEntry.S['Source']].S['Temper'];
-		DestID := Util.PregReplace('%ID%',OutfitEntry.S['ID'],DestID);
-		DestID := Util.PregReplace('%Variant%',VariantName,DestID);
+		DestID := MaidReplaceFormID(
+			JSON.O['Outputs'].O[ArmorEntry.S['Source']].S['Temper'],
+			OutfitEntry.S['ID'],
+			VariantName,
+			TRUE
+		);
+
 		DestForm := Skyrim.FormFind(Plugin,'COBJ',DestID);
 
 		// check that the template exists.
